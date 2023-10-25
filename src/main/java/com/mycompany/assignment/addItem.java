@@ -4,8 +4,17 @@
  */
 package com.mycompany.assignment;
 
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -13,12 +22,23 @@ import javax.swing.JOptionPane;
  */
 public class addItem extends javax.swing.JFrame {
 
+    private Library library;
+    private LmsFrame lf;
+    private bookViewer BookViewer;
+
     /**
      * Creates new form addItem
+     *
+     * @param lib
+     * @param lf
      */
-    public addItem() {
+    public addItem(Library lib, LmsFrame lf) {
         initComponents();
+        this.library = lib;
+        this.lf = lf;
+
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,148 +49,173 @@ public class addItem extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        titleAdd = new java.awt.Label();
-        authoradd = new java.awt.Label();
-        publicationYear = new java.awt.Label();
-        addItemSave = new javax.swing.JButton();
-        titleFieldAdd = new javax.swing.JTextField();
-        authorFieldAdd = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        AddItemSave = new javax.swing.JButton();
         publicationYearFieldAdd = new javax.swing.JTextField();
+        authorFieldAdd = new javax.swing.JTextField();
+        titleFieldAdd = new javax.swing.JTextField();
+        titleAdd = new java.awt.Label();
+        authorAdd = new java.awt.Label();
+        publicationYearAdd = new java.awt.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add Item");
         setBackground(new java.awt.Color(255, 255, 255));
 
+        AddItemSave.setBackground(new java.awt.Color(204, 204, 255));
+        AddItemSave.setText("Add Item");
+        AddItemSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddItemSaveActionPerformed(evt);
+            }
+        });
+
         titleAdd.setText("Title:");
 
-        authoradd.setName(""); // NOI18N
-        authoradd.setText("Author:");
+        authorAdd.setName(""); // NOI18N
+        authorAdd.setText("Author:");
 
-        publicationYear.setText("Publication Year:");
+        publicationYearAdd.setText("Publication Year:");
 
-        addItemSave.setBackground(new java.awt.Color(204, 204, 255));
-        addItemSave.setText("Add Item");
-        addItemSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addItemSaveActionPerformed(evt);
-            }
-        });
-
-        titleFieldAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                titleFieldAddActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(authorAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(publicationYearAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(titleAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(titleFieldAdd)
+                        .addComponent(authorFieldAdd)
+                        .addComponent(publicationYearFieldAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE))
+                    .addComponent(AddItemSave, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(titleFieldAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(titleAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(authorAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(authorFieldAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(publicationYearAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(publicationYearFieldAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(AddItemSave)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(publicationYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(publicationYearFieldAdd))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(53, 53, 53)
-                                .addComponent(authoradd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(authorFieldAdd))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 64, Short.MAX_VALUE)
-                                .addComponent(titleAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(titleFieldAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(addItemSave, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(32, 32, 32))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(titleAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(titleFieldAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(authoradd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(authorFieldAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(publicationYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(publicationYearFieldAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                .addComponent(addItemSave)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-
-        titleAdd.getAccessibleContext().setAccessibleName("title");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void titleFieldAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titleFieldAddActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_titleFieldAddActionPerformed
+    private void AddItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddItemSaveActionPerformed
+    String title = titleFieldAdd.getText();
+    String author = authorFieldAdd.getText();
+    String yearString = publicationYearFieldAdd.getText();
+    try {
+        int yearInt = Integer.parseInt(yearString);
 
-    private void addItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addItemSaveActionPerformed
-        if (titleFieldAdd.getText().isEmpty() || authorFieldAdd.getText().isEmpty()
-                || publicationYearFieldAdd.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter all the fields!");
+        if (title.isEmpty() || author.isEmpty() || yearString.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter all the fields!", "Error", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            String title = titleFieldAdd.getText();
-            String author = authorFieldAdd.getText();
-            String publicationYear = publicationYearFieldAdd.getText();
-        }
+            // Check if the book with the same title already exists.
+            boolean bookAlreadyExists = false;
+            for (Book book : library.getBooksList()) {
+                if (book.getTitle().equals(title)) {
+                    bookAlreadyExists = true;
+                    break;
+                }
+            }
 
-    }//GEN-LAST:event_addItemSaveActionPerformed
+            if (!bookAlreadyExists) {
+                // Create a new book entry with a "Read" button and an action listener.
+                Book book = new Book(title, author, yearInt);
+                JButton readButton = new JButton("Read");
+                readButton.addActionListener(e -> {
+                    String filePath = "C:\\Users\\hp\\Desktop\\SCD\\Assignments\\3\\AddedBooks\\" + title + ".txt";
+                    try {
+                    BufferedReader reader = new BufferedReader(new FileReader(filePath));
+                    StringBuilder bookText = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        bookText.append(line).append("\n");
+                    }
+                    reader.close();
+                    JFrame frame = new JFrame(title);
+                    JTextArea textArea = new JTextArea(bookText.toString());
+                    textArea.setWrapStyleWord(true);
+                    textArea.setLineWrap(true);
+                    textArea.setCaretPosition(0);
+                    textArea.setEditable(false);
+                    JScrollPane scrollPane = new JScrollPane(textArea);
+                    frame.add(scrollPane);
+                    frame.setSize(800, 600);
+                    frame.setVisible(true);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Error reading the book file.");
+                }
+                });
+                //book.setReadButton(readButton);
+                library.addBook(book);
+
+                // Create an empty file with the book's title as the filename.
+                String filePath = "C:\\Users\\hp\\Desktop\\SCD\\Assignments\\3\\AddedBooks\\" + title + ".txt";
+                try {
+                    File file = new File(filePath);
+                    if (file.createNewFile()) {
+                        System.out.println("File created: " + file.getName());
+                    } else {
+                        System.out.println("File already exists.");
+                    }
+                } catch (IOException e) {
+                    System.err.println("Error creating the file.");
+                }
+
+                // Update the table and close the "Add Item" frame.
+                lf.updateTable();
+                setVisible(false);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Book with this title already exists.");
+            }
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Enter an integer for the year field!", "Error", JOptionPane.INFORMATION_MESSAGE);
+    }
+    }//GEN-LAST:event_AddItemSaveActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(addItem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(addItem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(addItem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(addItem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new addItem().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addItemSave;
+    private javax.swing.JButton AddItemSave;
+    private java.awt.Label authorAdd;
     private javax.swing.JTextField authorFieldAdd;
-    private java.awt.Label authoradd;
-    private java.awt.Label publicationYear;
+    private javax.swing.JPanel jPanel1;
+    private java.awt.Label publicationYearAdd;
     private javax.swing.JTextField publicationYearFieldAdd;
     private java.awt.Label titleAdd;
     private javax.swing.JTextField titleFieldAdd;

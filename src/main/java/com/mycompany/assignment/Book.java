@@ -4,22 +4,31 @@
  */
 package com.mycompany.assignment;
 
+import javax.swing.JButton;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 public class Book {
 
     String title;
     String author;
     int year;
+    JButton readButton;
+    private LmsFrame lmsFrame;
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setLmsFrame(LmsFrame lmsFrame) {
+        this.lmsFrame = lmsFrame;
     }
 
-    public void setAuthor(String author) {
+    public Book(String title, String author, int year) {
+        final String finalTitle = title;
+        this.title = finalTitle;
         this.author = author;
-    }
-
-    public void setYear(int year) {
         this.year = year;
+        readButton = new JButton("Read");
+        readButton.addActionListener(e -> System.out.println("Action listener added for: " + finalTitle));
     }
 
     public String getTitle() {
@@ -34,18 +43,11 @@ public class Book {
         return year;
     }
 
-    public Book(String t, String a, int y) {
-        title = t;
-        author = a;
-        year = y;
+    public JButton getReadButton() {
+        return readButton;
     }
 
-    public void display() {
-        System.out.println("Title: " + title + " by " + author + "(" + year + ")");
-    }
-
-    @Override
-    public String toString() {
-        return "Title: " + title + " by " + author + "(" + year + ")";
+    private void openBookContent() {
+        bookViewer.viewBook(title);
     }
 }
