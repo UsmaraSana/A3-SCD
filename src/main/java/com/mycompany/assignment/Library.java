@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.assignment;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
@@ -71,15 +70,31 @@ public class Library {
     }
 
     public Object[][] getBooksData() {
-        Object[][] data = new Object[booksList.size()][4];
+        Object[][] data = new Object[booksList.size()][5]; // Add one column for the "Read" button
         for (int i = 0; i < booksList.size(); i++) {
             Book book = booksList.get(i);
             data[i][0] = book.getTitle();
             data[i][1] = book.getAuthor();
             data[i][2] = book.getYear();
-            data[i][3] = book.getReadButton();
+            JButton readButton = new JButton("Read");
+            final int finalI = i; 
+            readButton.addActionListener(e -> {
+                String title = (String) data[finalI][0];
+                lmsFrame.viewBook(title);
+            });
+            data[i][3] = readButton;
         }
         return data;
+    }
+    
+
+    public Book getBookByTitle(String title) {
+        for (Book book : booksList) {
+            if (book.getTitle().equals(title)) {
+                return book;
+            }
+        }
+        return null;
     }
 
    public void loadFromFile(String filename) {
@@ -97,7 +112,6 @@ public class Library {
 
             // Use the title as the unique identifier for the book
             Book book = new Book(title, author, year);
-            book.setLmsFrame(lmsFrame);
             booksList.add(book);
         }
     } catch (IOException e) {
@@ -105,3 +119,4 @@ public class Library {
     }
 }   
 }
+

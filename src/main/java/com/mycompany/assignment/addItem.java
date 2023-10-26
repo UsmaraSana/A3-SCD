@@ -24,7 +24,6 @@ public class addItem extends javax.swing.JFrame {
 
     private Library library;
     private LmsFrame lf;
-    private bookViewer BookViewer;
 
     /**
      * Creates new form addItem
@@ -131,6 +130,7 @@ public class addItem extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AddItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddItemSaveActionPerformed
+    {                                            
     String title = titleFieldAdd.getText();
     String author = authorFieldAdd.getText();
     String yearString = publicationYearFieldAdd.getText();
@@ -140,7 +140,6 @@ public class addItem extends javax.swing.JFrame {
         if (title.isEmpty() || author.isEmpty() || yearString.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please enter all the fields!", "Error", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            // Check if the book with the same title already exists.
             boolean bookAlreadyExists = false;
             for (Book book : library.getBooksList()) {
                 if (book.getTitle().equals(title)) {
@@ -150,8 +149,16 @@ public class addItem extends javax.swing.JFrame {
             }
 
             if (!bookAlreadyExists) {
-                // Create a new book entry with a "Read" button and an action listener.
                 Book book = new Book(title, author, yearInt);
+                try (BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\hp\\Desktop\\Data.txt", true))) {
+                        String bookData = "\n"+title + "," + author + "," + yearInt;
+                        bw.write(bookData);
+                        bw.newLine();
+                        
+                 
+                } catch (IOException e) {
+                    System.out.println("Error writing to file!" + e.getMessage());
+                }
                 JButton readButton = new JButton("Read");
                 readButton.addActionListener(e -> {
                     String filePath = "C:\\Users\\hp\\Desktop\\SCD\\Assignments\\3\\AddedBooks\\" + title + ".txt";
@@ -177,10 +184,7 @@ public class addItem extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Error reading the book file.");
                 }
                 });
-                //book.setReadButton(readButton);
                 library.addBook(book);
-
-                // Create an empty file with the book's title as the filename.
                 String filePath = "C:\\Users\\hp\\Desktop\\SCD\\Assignments\\3\\AddedBooks\\" + title + ".txt";
                 try {
                     File file = new File(filePath);
@@ -192,8 +196,6 @@ public class addItem extends javax.swing.JFrame {
                 } catch (IOException e) {
                     System.err.println("Error creating the file.");
                 }
-
-                // Update the table and close the "Add Item" frame.
                 lf.updateTable();
                 setVisible(false);
                 dispose();
@@ -203,6 +205,7 @@ public class addItem extends javax.swing.JFrame {
         }
     } catch (NumberFormatException e) {
         JOptionPane.showMessageDialog(null, "Enter an integer for the year field!", "Error", JOptionPane.INFORMATION_MESSAGE);
+    }
     }
     }//GEN-LAST:event_AddItemSaveActionPerformed
 

@@ -5,6 +5,8 @@
 package com.mycompany.assignment;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,7 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-
+import javax.swing.table.TableColumn;
 /**
  *
  * @author hp
@@ -37,9 +39,12 @@ public final class LmsFrame extends javax.swing.JFrame {
     public LmsFrame(Library lib) {
         initComponents();
         this.library = lib;
-        initializeActionListeners(library.getBooksList());
+        TableColumn buttonColumn = Table.getColumnModel().getColumn(3); // Assuming the fourth column
+        buttonColumn.setCellRenderer(new ButtonRenderer());
+        buttonColumn.setCellEditor(new ButtonEditor(new JCheckBox()));
         updateTable();
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -60,6 +65,7 @@ public final class LmsFrame extends javax.swing.JFrame {
         deleteitemButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         Table = new javax.swing.JTable();
+        GraphButton = new javax.swing.JButton();
 
         jDialog1.setTitle("Add item");
 
@@ -165,18 +171,29 @@ public final class LmsFrame extends javax.swing.JFrame {
             Table.getColumnModel().getColumn(3).setHeaderValue("Read Item");
         }
 
+        GraphButton.setBackground(new java.awt.Color(204, 204, 255));
+        GraphButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        GraphButton.setText("Graph");
+        GraphButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GraphButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(125, Short.MAX_VALUE)
+                .addContainerGap(43, Short.MAX_VALUE)
+                .addComponent(GraphButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(55, 55, 55)
                 .addComponent(additemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53)
+                .addGap(49, 49, 49)
                 .addComponent(editItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(58, 58, 58)
+                .addGap(54, 54, 54)
                 .addComponent(deleteitemButton)
-                .addGap(119, 119, 119))
+                .addGap(54, 54, 54))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE))
         );
@@ -187,7 +204,8 @@ public final class LmsFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(editItemButton)
                     .addComponent(deleteitemButton)
-                    .addComponent(additemButton))
+                    .addComponent(additemButton)
+                    .addComponent(GraphButton))
                 .addGap(17, 17, 17))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
@@ -227,60 +245,79 @@ public final class LmsFrame extends javax.swing.JFrame {
         deleteFrame.setVisible(true);
     }//GEN-LAST:event_deleteitemButtonActionPerformed
 
-    private void initializeActionListeners(List<Book> books) {
-        System.out.println("Initializing Action listeners ");
-        for (Book book : books) {
-            JButton readButton = book.getReadButton();
+    private void GraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GraphButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_GraphButtonActionPerformed
 
-            if (readButton != null) {
-                String title = book.getTitle();
-                System.out.println("Before Action listener: " + title);
-                readButton.addActionListener(e -> {
-                    System.out.println("Action listener added for: " + title);
-                    //bookViewer.viewBook(title);
-                });
-            }
+    public void updateTable() {
+        DefaultTableModel tableModel = (DefaultTableModel) Table.getModel();
+        tableModel.setRowCount(0);
+    
+        Object[][] bookData = library.getBooksData();
+        for (Object[] r : bookData) {
+            tableModel.addRow(r);
+        }
+    
+        Table.setModel(tableModel);
+    }
+    
+    class ButtonRenderer extends JButton implements TableCellRenderer {
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setText("Read");
+            return this;
         }
     }
 
-    public void updateTable() {
-        SwingUtilities.invokeLater(() -> {
-            DefaultTableModel tableModel = new DefaultTableModel(0, 4) {
-                @Override
-                public Class<?> getColumnClass(int columnIndex) {
-                    if (columnIndex == 3) {
-                        return JButton.class; // Set the column class to JButton
-                    } else {
-                        return String.class; // Other columns contain strings
-                    }
-                }
-            };
+    class ButtonEditor extends DefaultCellEditor {
+        private JButton button;
 
-            tableModel.setColumnIdentifiers(new String[]{"Title", "Author", "Publication Year", "Read Item"});
-            tableModel.setRowCount(0);
+        public ButtonEditor(JCheckBox checkBox) {
+            super(checkBox);
+            button = new JButton();
+            button.setOpaque(true);
+            button.addActionListener((ActionEvent e) -> {
+                // Handle the "Read" button click event here
+                String title1 = (String) Table.getValueAt(Table.getSelectedRow(), 0); // Assuming title is in the first column
+                viewBook(title1);
+            });            
+        }
 
-            for (int row = 0; row < library.getBooksList().size(); row++) {
-                Book book = library.getBooksList().get(row);
-                Object[] rowData = new Object[4];
-                rowData[0] = book.getTitle();
-                rowData[1] = book.getAuthor();
-                rowData[2] = book.getYear();
-
-                JButton readButton = book.getReadButton();
-                System.out.println("Button address: " + System.identityHashCode(readButton));
-                if (readButton != null) {
-                    System.out.println("Book Title: " + book.getTitle() + " | Button: " + readButton.getClass());
-                    // The following line is where you can check if the action listener is added
-                    System.out.println("Action listener count: " + readButton.getActionListeners().length);
-                    readButton.setEnabled(true);
-                    rowData[3] = readButton;
-                }
-
-                tableModel.addRow(rowData);
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            button.setText("Read");
+            return button;
+        }
+    }
+    public void viewBook(String title) {
+        String filePath = "C:\\Users\\hp\\Desktop\\SCD\\Assignments\\3\\AddedBooks\\" + title + ".txt";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            StringBuilder bookText = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                bookText.append(line).append("\n");
             }
+            reader.close();
 
-            Table.setModel(tableModel);
-        });
+            JFrame frame = new JFrame(title);
+            JTextArea textArea = new JTextArea(bookText.toString());
+            textArea.setWrapStyleWord(true);
+            textArea.setLineWrap(true);
+            textArea.setCaretPosition(0);
+            textArea.setEditable(false);
+
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            frame.add(scrollPane);
+            frame.setSize(800, 600);
+            frame.setVisible(true);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error reading the book file.");
+        }
     }
 
 
@@ -289,6 +326,7 @@ public final class LmsFrame extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton GraphButton;
     private javax.swing.JTable Table;
     private javax.swing.JButton additemButton;
     private javax.swing.JButton deleteitemButton;

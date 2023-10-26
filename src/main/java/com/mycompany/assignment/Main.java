@@ -8,14 +8,11 @@ public class Main {
         String filepath = "C:\\Users\\hp\\Desktop\\Data.txt";
         lib.loadFromFile(filepath);
         System.out.println();
-        /*java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new addItem(lib).setVisible(true);
-            }
-        });*/
         java.awt.EventQueue.invokeLater(() -> {
             LmsFrame frame=new LmsFrame(lib);
             frame.setVisible(true);
+            frame.updateTable();
         });
     }
 }
+
