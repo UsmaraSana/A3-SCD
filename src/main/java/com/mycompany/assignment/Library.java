@@ -114,7 +114,8 @@ public class Library {
                 String title = parts[0].trim();
                 String author = parts[1].trim();
                 int year = Integer.parseInt(parts[2].trim());
-                Book book = new Book(title, author, year);
+                int popCount = Integer.parseInt(parts[3].trim());
+                Book book = new Book(title, author, year, popCount);
                 booksList.add(book);
             }
         } catch (IOException e) {

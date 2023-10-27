@@ -11,11 +11,11 @@ public class Book {
     int year;
     int popularityCount;
 
-    public Book(String title, String author, int year) {
+    public Book(String title, String author, int year, int popularityCount) {
         this.title = title;
         this.author = author;
         this.year = year;
-        this.popularityCount = 0;
+        this.popularityCount = popularityCount;
     }
 
     public String getTitle() {

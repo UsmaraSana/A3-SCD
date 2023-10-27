@@ -4,9 +4,12 @@
  */
 package com.mycompany.assignment;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -47,6 +50,8 @@ public final class LmsFrame extends javax.swing.JFrame {
         barGraph.setBounds(20, 20, 600, 400);
         barGraph.setVisible(true);
         add(barGraph);
+        TableRowMouseListener mouseListener = new TableRowMouseListener(Table);
+        Table.addMouseListener(mouseListener);
     }
 
     /**
@@ -252,8 +257,8 @@ public final class LmsFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         JFrame graphFrame = new JFrame("Popularity Graph");
         graphFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        BarGraph barGraph = new BarGraph(library);
-        graphFrame.add(barGraph);
+        BarGraph Graph = new BarGraph(library);
+        graphFrame.add(Graph);
         graphFrame.setSize(800, 600);
         graphFrame.setVisible(true);
     }//GEN-LAST:event_GraphButtonActionPerformed
@@ -297,7 +302,9 @@ public final class LmsFrame extends javax.swing.JFrame {
                     String title1 = (String) Table.getValueAt(selectedRow, 0);
                     Book book = library.getBookByTitle(title1);
                     if (book != null) {
-                        book.popularityCountInc();
+                        if (book.getPopularityCount() != 0) {
+                            book.popularityCountInc();
+                        }
                         viewBook(title1);
                     }
                 }
@@ -336,6 +343,32 @@ public final class LmsFrame extends javax.swing.JFrame {
             frame.setVisible(true);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error reading the book file.");
+        }
+    }
+
+    class TableRowMouseListener extends MouseAdapter {
+
+        private final JTable table;
+
+        public TableRowMouseListener(JTable table) {
+            this.table = table;
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            int row = table.rowAtPoint(e.getPoint());
+            if (row >= 0) {
+                table.setSelectionBackground(Color.LIGHT_GRAY);
+                table.setSelectionForeground(Color.BLACK);
+                table.repaint();
+            }
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            table.setSelectionBackground(table.getBackground());
+            table.setSelectionForeground(table.getForeground());
+            table.repaint();
         }
     }
 

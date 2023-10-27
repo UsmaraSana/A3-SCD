@@ -139,14 +139,14 @@ public class editItem extends javax.swing.JFrame {
                     for (Book b : library.booksList) {
                         if (titleFieldEdit.getText().equals(b.getTitle())) {
                             library.editBook(title, author, yearInt);
-                            tempBooksList.add(new Book(title, author, yearInt));
+                            tempBooksList.add(new Book(title, author, yearInt, b.getPopularityCount()));
                             found = true;
                         } else {
                             tempBooksList.add(b);
                         }
                     }
                     for (Book b : tempBooksList) {
-                        String bookData = b.getTitle() + "," + b.getAuthor() + "," + b.getYear();
+                        String bookData = b.getTitle() + "," + b.getAuthor() + "," + b.getYear() + "," + b.getPopularityCount();
                         bw.write(bookData);
                         bw.newLine();
                     }

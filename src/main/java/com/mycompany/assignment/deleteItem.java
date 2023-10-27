@@ -114,12 +114,13 @@ public class deleteItem extends javax.swing.JFrame {
                 for (Book b : library.booksList) {
                     if (titleFieldDelete.getText().equals(b.getTitle())) {
                         found = true;
+                        library.booksList = (ArrayList<Book>) tempBooksList;
                     } else {
                         tempBooksList.add(b);
                     }
                 }
                 for (Book b : tempBooksList) {
-                    String bookData = b.getTitle() + "," + b.getAuthor() + "," + b.getYear();
+                    String bookData = b.getTitle() + "," + b.getAuthor() + "," + b.getYear() + "," + b.getPopularityCount();
                     bw.write(bookData);
                     bw.newLine();
                 }
@@ -130,7 +131,7 @@ public class deleteItem extends javax.swing.JFrame {
             if (!found) {
                 JOptionPane.showMessageDialog(null, "No such book exists!", "Error", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                library.booksList = (ArrayList<Book>) tempBooksList;
+
                 lf.updateTable();
                 lf.setVisible(true);
                 this.setVisible(false);

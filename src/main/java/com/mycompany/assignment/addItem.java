@@ -38,7 +38,6 @@ public class addItem extends javax.swing.JFrame {
 
     }
 
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -130,83 +129,82 @@ public class addItem extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AddItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddItemSaveActionPerformed
-    {                                            
-    String title = titleFieldAdd.getText();
-    String author = authorFieldAdd.getText();
-    String yearString = publicationYearFieldAdd.getText();
-    try {
-        int yearInt = Integer.parseInt(yearString);
+        {
+            String title = titleFieldAdd.getText();
+            String author = authorFieldAdd.getText();
+            String yearString = publicationYearFieldAdd.getText();
+            try {
+                int yearInt = Integer.parseInt(yearString);
 
-        if (title.isEmpty() || author.isEmpty() || yearString.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter all the fields!", "Error", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            boolean bookAlreadyExists = false;
-            for (Book book : library.getBooksList()) {
-                if (book.getTitle().equals(title)) {
-                    bookAlreadyExists = true;
-                    break;
-                }
-            }
-
-            if (!bookAlreadyExists) {
-                Book book = new Book(title, author, yearInt);
-                try (BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\hp\\Desktop\\Data.txt", true))) {
-                        String bookData = "\n"+title + "," + author + "," + yearInt;
-                        bw.write(bookData);
-                        bw.newLine();
-                        
-                 
-                } catch (IOException e) {
-                    System.out.println("Error writing to file!" + e.getMessage());
-                }
-                JButton readButton = new JButton("Read");
-                readButton.addActionListener(e -> {
-                    String filePath = "C:\\Users\\hp\\Desktop\\SCD\\Assignments\\3\\AddedBooks\\" + title + ".txt";
-                    try {
-                    BufferedReader reader = new BufferedReader(new FileReader(filePath));
-                    StringBuilder bookText = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        bookText.append(line).append("\n");
+                if (title.isEmpty() || author.isEmpty() || yearString.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please enter all the fields!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    boolean bookAlreadyExists = false;
+                    for (Book book : library.getBooksList()) {
+                        if (book.getTitle().equals(title)) {
+                            bookAlreadyExists = true;
+                            break;
+                        }
                     }
-                    reader.close();
-                    JFrame frame = new JFrame(title);
-                    JTextArea textArea = new JTextArea(bookText.toString());
-                    textArea.setWrapStyleWord(true);
-                    textArea.setLineWrap(true);
-                    textArea.setCaretPosition(0);
-                    textArea.setEditable(false);
-                    JScrollPane scrollPane = new JScrollPane(textArea);
-                    frame.add(scrollPane);
-                    frame.setSize(800, 600);
-                    frame.setVisible(true);
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, "Error reading the book file.");
-                }
-                });
-                library.addBook(book);
-                String filePath = "C:\\Users\\hp\\Desktop\\SCD\\Assignments\\3\\AddedBooks\\" + title + ".txt";
-                try {
-                    File file = new File(filePath);
-                    if (file.createNewFile()) {
-                        System.out.println("File created: " + file.getName());
+
+                    if (!bookAlreadyExists) {
+                        Book book = new Book(title, author, yearInt, 0);
+                        try (BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\hp\\Desktop\\Data.txt", true))) {
+                            String bookData = title + "," + author + "," + yearInt + "," + 0;
+                            bw.write(bookData);
+                            bw.newLine();
+
+                        } catch (IOException e) {
+                            System.out.println("Error writing to file!" + e.getMessage());
+                        }
+                        JButton readButton = new JButton("Read");
+                        readButton.addActionListener(e -> {
+                            String filePath = "C:\\Users\\hp\\Desktop\\SCD\\Assignments\\3\\AddedBooks\\" + title + ".txt";
+                            try {
+                                BufferedReader reader = new BufferedReader(new FileReader(filePath));
+                                StringBuilder bookText = new StringBuilder();
+                                String line;
+                                while ((line = reader.readLine()) != null) {
+                                    bookText.append(line).append("\n");
+                                }
+                                reader.close();
+                                JFrame frame = new JFrame(title);
+                                JTextArea textArea = new JTextArea(bookText.toString());
+                                textArea.setWrapStyleWord(true);
+                                textArea.setLineWrap(true);
+                                textArea.setCaretPosition(0);
+                                textArea.setEditable(false);
+                                JScrollPane scrollPane = new JScrollPane(textArea);
+                                frame.add(scrollPane);
+                                frame.setSize(800, 600);
+                                frame.setVisible(true);
+                            } catch (IOException ex) {
+                                JOptionPane.showMessageDialog(null, "Error reading the book file.");
+                            }
+                        });
+                        library.addBook(book);
+                        String filePath = "C:\\Users\\hp\\Desktop\\SCD\\Assignments\\3\\AddedBooks\\" + title + ".txt";
+                        try {
+                            File file = new File(filePath);
+                            if (file.createNewFile()) {
+                                System.out.println("File created: " + file.getName());
+                            } else {
+                                System.out.println("File already exists.");
+                            }
+                        } catch (IOException e) {
+                            System.err.println("Error creating the file.");
+                        }
+                        lf.updateTable();
+                        setVisible(false);
+                        dispose();
                     } else {
-                        System.out.println("File already exists.");
+                        JOptionPane.showMessageDialog(this, "Book with this title already exists.");
                     }
-                } catch (IOException e) {
-                    System.err.println("Error creating the file.");
                 }
-                lf.updateTable();
-                setVisible(false);
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Book with this title already exists.");
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Enter an integer for the year field!", "Error", JOptionPane.INFORMATION_MESSAGE);
             }
         }
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(null, "Enter an integer for the year field!", "Error", JOptionPane.INFORMATION_MESSAGE);
-    }
-    }
     }//GEN-LAST:event_AddItemSaveActionPerformed
 
     /**
