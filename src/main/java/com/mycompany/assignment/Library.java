@@ -3,15 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.assignment;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.util.*;
 import java.io.*;
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 /**
  *
@@ -20,7 +15,7 @@ import javax.swing.JTextArea;
 public class Library {
 
     public ArrayList<Book> booksList;
-    private LmsFrame lmsFrame; // Add a reference to LmsFrame
+    private LmsFrame lmsFrame;
 
     public void setLmsFrame(LmsFrame lmsFrame) {
         this.lmsFrame = lmsFrame;
@@ -70,14 +65,14 @@ public class Library {
     }
 
     public Object[][] getBooksData() {
-        Object[][] data = new Object[booksList.size()][5]; // Add one column for the "Read" button
+        Object[][] data = new Object[booksList.size()][5];
         for (int i = 0; i < booksList.size(); i++) {
             Book book = booksList.get(i);
             data[i][0] = book.getTitle();
             data[i][1] = book.getAuthor();
             data[i][2] = book.getYear();
             JButton readButton = new JButton("Read");
-            final int finalI = i; 
+            final int finalI = i;
             readButton.addActionListener(e -> {
                 String title = (String) data[finalI][0];
                 lmsFrame.viewBook(title);
@@ -86,7 +81,17 @@ public class Library {
         }
         return data;
     }
-    
+
+    public int calculateMaxPopularity() {
+        int maxPopularity = 0;
+        for (Book book : booksList) {
+            int popularity = book.getPopularityCount();
+            if (popularity > maxPopularity) {
+                maxPopularity = popularity;
+            }
+        }
+        return maxPopularity;
+    }
 
     public Book getBookByTitle(String title) {
         for (Book book : booksList) {
@@ -97,26 +102,23 @@ public class Library {
         return null;
     }
 
-   public void loadFromFile(String filename) {
-    try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] parts = line.split(",");
-            if (parts.length < 1) {
-                System.out.println("Invalid line in the input file: " + line);
-                continue;
+    public void loadFromFile(String filename) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length < 1) {
+                    System.out.println("Invalid line in the input file: " + line);
+                    continue;
+                }
+                String title = parts[0].trim();
+                String author = parts[1].trim();
+                int year = Integer.parseInt(parts[2].trim());
+                Book book = new Book(title, author, year);
+                booksList.add(book);
             }
-            String title = parts[0].trim();
-            String author = parts[1].trim();
-            int year = Integer.parseInt(parts[2].trim());
-
-            // Use the title as the unique identifier for the book
-            Book book = new Book(title, author, year);
-            booksList.add(book);
+        } catch (IOException e) {
+            System.out.println("Error reading from file " + e.getMessage());
         }
-    } catch (IOException e) {
-        System.out.println("Error reading from file " + e.getMessage());
     }
-}   
 }
-

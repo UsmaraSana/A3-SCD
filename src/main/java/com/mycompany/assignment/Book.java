@@ -4,24 +4,18 @@
  */
 package com.mycompany.assignment;
 
-import javax.swing.JButton;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
 public class Book {
 
     String title;
     String author;
     int year;
+    int popularityCount;
 
     public Book(String title, String author, int year) {
-        final String finalTitle = title;
-        this.title = finalTitle;
+        this.title = title;
         this.author = author;
         this.year = year;
-        
+        this.popularityCount = 0;
     }
 
     public String getTitle() {
@@ -35,5 +29,12 @@ public class Book {
     public int getYear() {
         return year;
     }
-}
 
+    public int getPopularityCount() {
+        return popularityCount;
+    }
+
+    public void popularityCountInc() {
+        popularityCount = popularityCount + 1;
+    }
+}

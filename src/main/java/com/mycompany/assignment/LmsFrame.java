@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -19,10 +18,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+
 /**
  *
  * @author hp
@@ -30,6 +29,7 @@ import javax.swing.table.TableColumn;
 public final class LmsFrame extends javax.swing.JFrame {
 
     private Library library;
+    private BarGraph barGraph;
 
     /**
      * Creates new form frame1
@@ -39,12 +39,15 @@ public final class LmsFrame extends javax.swing.JFrame {
     public LmsFrame(Library lib) {
         initComponents();
         this.library = lib;
-        TableColumn buttonColumn = Table.getColumnModel().getColumn(3); // Assuming the fourth column
+        TableColumn buttonColumn = Table.getColumnModel().getColumn(3);
         buttonColumn.setCellRenderer(new ButtonRenderer());
         buttonColumn.setCellEditor(new ButtonEditor(new JCheckBox()));
         updateTable();
+        barGraph = new BarGraph(library);
+        barGraph.setBounds(20, 20, 600, 400);
+        barGraph.setVisible(true);
+        add(barGraph);
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -247,21 +250,28 @@ public final class LmsFrame extends javax.swing.JFrame {
 
     private void GraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GraphButtonActionPerformed
         // TODO add your handling code here:
+        JFrame graphFrame = new JFrame("Popularity Graph");
+        graphFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        BarGraph barGraph = new BarGraph(library);
+        graphFrame.add(barGraph);
+        graphFrame.setSize(800, 600);
+        graphFrame.setVisible(true);
     }//GEN-LAST:event_GraphButtonActionPerformed
 
     public void updateTable() {
         DefaultTableModel tableModel = (DefaultTableModel) Table.getModel();
         tableModel.setRowCount(0);
-    
+
         Object[][] bookData = library.getBooksData();
         for (Object[] r : bookData) {
             tableModel.addRow(r);
         }
-    
+
         Table.setModel(tableModel);
     }
-    
+
     class ButtonRenderer extends JButton implements TableCellRenderer {
+
         public ButtonRenderer() {
             setOpaque(true);
         }
@@ -274,6 +284,7 @@ public final class LmsFrame extends javax.swing.JFrame {
     }
 
     class ButtonEditor extends DefaultCellEditor {
+
         private JButton button;
 
         public ButtonEditor(JCheckBox checkBox) {
@@ -281,10 +292,17 @@ public final class LmsFrame extends javax.swing.JFrame {
             button = new JButton();
             button.setOpaque(true);
             button.addActionListener((ActionEvent e) -> {
-                // Handle the "Read" button click event here
-                String title1 = (String) Table.getValueAt(Table.getSelectedRow(), 0); // Assuming title is in the first column
-                viewBook(title1);
-            });            
+                int selectedRow = Table.getSelectedRow();
+                if (selectedRow >= 0) {
+                    String title1 = (String) Table.getValueAt(selectedRow, 0);
+                    Book book = library.getBookByTitle(title1);
+                    if (book != null) {
+                        book.popularityCountInc();
+                        viewBook(title1);
+                    }
+                }
+            });
+            setClickCountToStart(1);
         }
 
         @Override
@@ -293,6 +311,7 @@ public final class LmsFrame extends javax.swing.JFrame {
             return button;
         }
     }
+
     public void viewBook(String title) {
         String filePath = "C:\\Users\\hp\\Desktop\\SCD\\Assignments\\3\\AddedBooks\\" + title + ".txt";
         try {
@@ -319,7 +338,6 @@ public final class LmsFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error reading the book file.");
         }
     }
-
 
     /**
      * @param args the command line arguments
